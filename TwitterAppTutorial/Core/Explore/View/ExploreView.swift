@@ -1,0 +1,35 @@
+//
+//  ExploreView.swift
+//  TwitterAppTutorial
+//
+//  Created by luane Niejelski on 10/24/23.
+//
+
+import SwiftUI
+
+struct ExploreView: View {
+    var body: some View {
+     NavigationView {
+        VStack {
+          ScrollView {
+            LazyVStack {
+              ForEach(0...25, id: \.self) { _ in
+                NavigationLink {
+                  ProfileView()
+                } label: {
+                  UserRowView()
+                  
+                }
+              }
+            }
+          }
+        }
+        .navigationTitle("Explore")
+        .navigationBarTitleDisplayMode(.inline)
+      }
+    }
+}
+
+#Preview {
+    ExploreView()
+}
