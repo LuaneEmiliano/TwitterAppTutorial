@@ -6,12 +6,32 @@
 //
 
 import SwiftUI
-
+import Kingfisher
+// This is the presentation logic
 struct ContentView: View {
-  
   @State private var showMenu = false
+  @EnvironmentObject var viewModel: AuthViewModel
   
   var body: some View {
+    Group {
+      if viewModel.userSession == nil {
+        LoginView()
+      } else {
+        mainInterfaceView
+      }
+    }
+    .fullScreenCover(isPresented: $viewModel.didAuthUser) {
+      ProfilePhotoSelectorView()
+    }
+  }
+}
+
+#Preview {
+  ContentView()
+}
+
+extension ContentView {
+  var mainInterfaceView: some View {
     ZStack(alignment: .topLeading) {
       MainTabView()
         .navigationBarHidden(showMenu)
@@ -37,14 +57,19 @@ struct ContentView: View {
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .navigationBarLeading) {
+        if let user = viewModel.currentUser {
         Button {
           withAnimation(.easeInOut) {
             showMenu.toggle()
           }
-            
+          
         }label: {
-          Circle()
+          KFImage(URL(string: user.profileImageUrl))
+            .resizable()
+            .scaledToFill()
             .frame(width: 32, height: 32)
+            .clipShape(Circle())
+        }
         }
       }
     }
@@ -52,8 +77,4 @@ struct ContentView: View {
       showMenu = false
     }
   }
-}
-
-#Preview {
-  ContentView()
 }
